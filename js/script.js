@@ -1,146 +1,324 @@
-let sections = document.querySelectorAll('section');
-let navLinks = document.querySelectorAll('header nav a');
+/* =========================================
+   ADVANCED JAVASCRIPT LOGIC
+   ========================================= */
 
-window.onscroll = () => {
-    sections.forEach(sec => {
-        let top = window.scrollY;
-        let offset = sec.offsetTop - 150;
-        let height = sec.offsetHeight;
-        let id = sec.getAttribute('id');
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- 0. Initialize EmailJS ---
+    // IMPORTANT: Replace 'YOUR_PUBLIC_KEY' with your actual public key from https://dashboard.emailjs.com/admin/account
+    (function() {
+        emailjs.init("6BNmPA4IFaw2UYK1e"); 
+    })();
 
-        if(top >= offset && top < offset + height) {
-            navLinks.forEach(links => {
-                links.classList.remove('active');
-                document.querySelector('header nav a[href*=' + id + ']').classList.add('active');
+
+    // --- 1. Custom Cursor with Magnetic Effect ---
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    const hoverTargets = document.querySelectorAll('.hover-target');
+
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    // Only enable on desktop
+    if (window.matchMedia("(min-width: 769px)").matches) {
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+        });
+
+        function animateCursor() {
+            const speed = 0.15;
+            cursorX += (mouseX - cursorX) * speed;
+            cursorY += (mouseY - cursorY) * speed;
+
+            cursorOutline.style.left = `${cursorX}px`;
+            cursorOutline.style.top = `${cursorY}px`;
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => {
+                document.body.classList.add('hovering');
             });
-        };
-    });
-};
+            target.addEventListener('mouseleave', () => {
+                document.body.classList.remove('hovering');
+            });
+        });
+    }
 
-var swiper = new Swiper(".portfolio-swiper", {
-    slidesPerView: 3,
-    spaceBetween: 30,
-    navigation: {
-    nextEl: ".btn-prev",
-    prevEl: ".btn-next",
-    },
-    breakpoints: {
-  // when window width is >= 320px
-  320: {
-    slidesPerView: 2,
-    spaceBetween: 20
-  },
-  // when window width is >= 480px
-  480: {
-    slidesPerView: 3,
-    spaceBetween: 30
-  }
-}
-  });
+    // --- 2. Canvas Particle Network ---
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particlesArray;
 
-
-
-document.addEventListener("DOMContentLoaded", function() {
-  const popup = document.getElementById("popup");
-  const portfolioDetail = document.getElementById("portfolioDetail");
-  const closePopup = document.getElementById("closePopup");
-  const popupImg = document.getElementById("popupImg");
-
-  portfolioDetail.addEventListener("click", function(event) {
-      event.preventDefault();
-      // Set the src attribute of popupImg to the new image
-      popupImg.src = "img/evoting.jpeg";
-      // Display the popup
-      popup.style.display = "block";
-  });
-
-  closePopup.addEventListener("click", function() {
-      popup.style.display = "none";
-  });
-
-  window.addEventListener("click", function(event) {
-      if (event.target == popup) {
-          popup.style.display = "none";
-      }
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-  // Popup teks
-  const textPopup = document.getElementById("textPopup");
-  const newsDetail = document.getElementById("newsDetail");
-  const closeTextPopup = document.getElementById("closeTextPopup");
-  const popupText = document.getElementById("popupText");
-
-  if (newsDetail) {
-      newsDetail.addEventListener("click", function(event) {
-          event.preventDefault();
-          // Set the text content for the popup
-          popupText.innerHTML = `
-              <h2>Peluncuran Aplikasi E-Voting Berbasis Website</h2>
-              <p>Dalam era digital yang semakin maju, proses pemungutan suara kini dapat dilakukan dengan lebih mudah dan efisien melalui aplikasi e-voting berbasis website. Kami dengan bangga memperkenalkan aplikasi e-voting yang dikembangkan menggunakan teknologi PHP dan MySQL, dirancang untuk memberikan solusi voting yang aman, cepat, dan akurat.</p>
-              <h3>Fitur Utama Aplikasi E-Voting</h3>
-              <ul>
-                  <li><strong>Antarmuka Pengguna yang Ramah:</strong> Aplikasi ini dilengkapi dengan antarmuka yang intuitif dan mudah digunakan, sehingga pengguna dari berbagai kalangan dapat dengan mudah mengakses dan berpartisipasi dalam proses pemungutan suara.</li>
-                  <li><strong>Keamanan Data:</strong> Mengutamakan keamanan data pengguna, aplikasi ini menggunakan enkripsi untuk memastikan setiap suara yang masuk tidak dapat dimanipulasi atau disalahgunakan.</li>
-                  <li><strong>Pengelolaan Pengguna:</strong> Admin memiliki kontrol penuh untuk mengelola daftar pemilih, mengatur hak akses, serta memantau proses pemungutan suara secara real-time.</li>
-                  <li><strong>Rekapitulasi Hasil Otomatis:</strong> Setelah proses voting selesai, hasil dapat segera dilihat dengan rekapitulasi yang otomatis dan transparan, meminimalisir kemungkinan kesalahan perhitungan.</li>
-                  <li><strong>Integrasi dengan Database MySQL:</strong> Dengan dukungan database MySQL, aplikasi ini mampu menangani jumlah data yang besar dengan performa yang optimal.</li>
-              </ul>
-              <h3>Manfaat Menggunakan E-Voting</h3>
-              <p>
-                  - <strong>Efisiensi Waktu dan Biaya:</strong> Mengurangi kebutuhan akan kertas dan logistik fisik, serta mempercepat proses penghitungan suara.<br>
-                  - <strong>Aksesibilitas:</strong> Pemilih dapat memberikan suara mereka dari mana saja selama mereka memiliki akses internet.<br>
-                  - <strong>Transparansi dan Akurasi:</strong> Sistem ini dirancang untuk memberikan hasil yang akurat dan dapat diverifikasi oleh semua pihak terkait.
-              </p>
-              <h3>Teknologi di Balik Aplikasi</h3>
-              <p>
-                  Pengembangan aplikasi ini menggunakan bahasa pemrograman PHP untuk logika aplikasi dan MySQL sebagai sistem manajemen basis data. Kombinasi ini memungkinkan pembuatan aplikasi yang dinamis, responsif, dan dapat diandalkan. PHP, dengan kemampuannya dalam pemrosesan server-side, serta MySQL, yang dikenal dengan kinerjanya yang cepat dan stabil, menjadikan aplikasi ini solusi ideal untuk kebutuhan e-voting modern.
-              </p>
-              <p>
-                  Dengan hadirnya aplikasi e-voting ini, kami berharap dapat memberikan kontribusi positif dalam proses demokrasi digital, memperkuat kepercayaan publik terhadap sistem pemungutan suara, dan memfasilitasi partisipasi yang lebih luas dari masyarakat.
-              </p>
-          `;
-          // Display the popup
-          textPopup.style.display = "block";
-      });
-  }
-
-  if (closeTextPopup) {
-      closeTextPopup.addEventListener("click", function() {
-          textPopup.style.display = "none";
-      });
-  }
-
-  window.addEventListener("click", function(event) {
-      if (event.target == textPopup) {
-          textPopup.style.display = "none";
-      }
-  });
-});
-
-  document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    // Mengambil data dari form
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    // Mengirim email menggunakan EmailJS
-    emailjs.send("service_op5i6vu", "template_s1topaa", {
-      from_name: name,
-      from_email: email,
-      message: message
-    })
-    .then(function(response) {
-       console.log('SUCCESS!', response.status, response.text);
-       alert('Email Berhasil dikirim! Terimakasih telah menghubungi!');
-    }, function(error) {
-       console.log('FAILED...', error);
-       alert('Email Gagal Dikirim:(');
+    function setCanvasSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    setCanvasSize();
+    window.addEventListener('resize', () => {
+        setCanvasSize();
+        initParticles();
     });
 
-    // Reset form setelah submit
-    document.getElementById('contact-form').reset();
-  });
+    class Particle {
+        constructor(x, y, directionX, directionY, size, color) {
+            this.x = x;
+            this.y = y;
+            this.directionX = directionX;
+            this.directionY = directionY;
+            this.size = size;
+            this.color = color;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+
+        update() {
+            if (this.x > canvas.width || this.x < 0) {
+                this.directionX = -this.directionX;
+            }
+            if (this.y > canvas.height || this.y < 0) {
+                this.directionY = -this.directionY;
+            }
+
+            this.x += this.directionX;
+            this.y += this.directionY;
+            this.draw();
+        }
+    }
+
+    function initParticles() {
+        particlesArray = [];
+        let numberOfParticles = (canvas.height * canvas.width) / 12000;
+        for (let i = 0; i < numberOfParticles; i++) {
+            let size = (Math.random() * 2) + 1;
+            let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+            let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+            let directionX = (Math.random() * 0.4) - 0.2;
+            let directionY = (Math.random() * 0.4) - 0.2;
+            let color = '#a0a0a0';
+
+            particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+        }
+    }
+
+    function connect() {
+        let opacityValue = 1;
+        for (let a = 0; a < particlesArray.length; a++) {
+            for (let b = a; b < particlesArray.length; b++) {
+                let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                
+                if (distance < (canvas.width/7) * (canvas.height/7)) {
+                    opacityValue = 1 - (distance / 20000);
+                    ctx.strokeStyle = 'rgba(160, 160, 160,' + opacityValue * 0.05 + ')';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                    ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                    ctx.stroke();
+                }
+            }
+            
+            // Mouse interaction
+            let mouseDistance = ((particlesArray[a].x - mouseX) * (particlesArray[a].x - mouseX))
+                    + ((particlesArray[a].y - mouseY) * (particlesArray[a].y - mouseY));
+            
+            if (mouseDistance < 25000) {
+                ctx.strokeStyle = 'rgba(0, 242, 255, 0.1)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                ctx.lineTo(mouseX, mouseY);
+                ctx.stroke();
+            }
+        }
+    }
+
+    function animateCanvas() {
+        requestAnimationFrame(animateCanvas);
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update();
+        }
+        connect();
+    }
+
+    initParticles();
+    animateCanvas();
+
+
+    // --- 3. Typewriter Effect ---
+    const typeTextSpan = document.querySelector('.typewriter-text');
+    const words = ["Software Engineer", "Creative Developer", "Problem Solver"];
+    let textIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 100;
+
+    function typeWriter() {
+        const currentWord = words[textIndex];
+        
+        if (isDeleting) {
+            typeTextSpan.textContent = currentWord.substring(0, charIndex - 1);
+            charIndex--;
+            typeSpeed = 50;
+        } else {
+            typeTextSpan.textContent = currentWord.substring(0, charIndex + 1);
+            charIndex++;
+            typeSpeed = 100;
+        }
+
+        if (!isDeleting && charIndex === currentWord.length) {
+            isDeleting = true;
+            typeSpeed = 2000;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            textIndex = (textIndex + 1) % words.length;
+            typeSpeed = 500;
+        }
+
+        setTimeout(typeWriter, typeSpeed);
+    }
+    setTimeout(typeWriter, 1500);
+
+
+    // --- 4. 3D Tilt Effect for Cards ---
+    const cards = document.querySelectorAll('.project-card');
+
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -10; 
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        });
+    });
+
+
+    // --- 5. Scroll Reveal ---
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+
+    // --- 6. Navbar Scroll Logic ---
+    let lastScroll = 0;
+    const navbar = document.querySelector('.navbar');
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll <= 0) {
+            navbar.classList.remove('hidden');
+            return;
+        }
+        
+        if (currentScroll > lastScroll && !navbar.classList.contains('hidden')) {
+            navbar.classList.add('hidden');
+        } else if (currentScroll < lastScroll && navbar.classList.contains('hidden')) {
+            navbar.classList.remove('hidden');
+        }
+        lastScroll = currentScroll;
+    });
+
+    // Mobile Menu Toggle (Basic)
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    menuBtn.addEventListener('click', () => {
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        if(navLinks.style.display === 'flex') {
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '70px';
+            navLinks.style.right = '5%';
+            navLinks.style.background = '#050510';
+            navLinks.style.padding = '1rem';
+            navLinks.style.border = '1px solid rgba(255,255,255,0.1)';
+            navLinks.style.borderRadius = '8px';
+        }
+    });
+
+    // --- 7. Contact Form Handling (EmailJS) ---
+    const contactForm = document.getElementById('contact-form');
+    const formMessage = document.getElementById('form-message');
+
+    contactForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const btn = contactForm.querySelector('button');
+        const originalBtnText = btn.innerHTML;
+
+        // Set Loading State
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        btn.disabled = true;
+
+        // IMPORTANT: Replace these with your actual IDs from EmailJS
+        const serviceID = 'service_op5i6vu';
+        const templateID = 'template_s1topaa';
+
+        emailjs.sendForm(serviceID, templateID, this)
+            .then(() => {
+                showSuccess();
+            }, (err) => {
+                showError(err);
+            });
+
+        function showSuccess() {
+            btn.innerHTML = '<i class="fas fa-check"></i> Sent!';
+            formMessage.textContent = "Thank you! Your message has been sent successfully.";
+            formMessage.className = "form-message success";
+            contactForm.reset();
+            
+            setTimeout(() => {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+                formMessage.textContent = "";
+            }, 5000);
+        }
+
+        function showError(error) {
+            btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+            formMessage.textContent = "Failed to send message. Please try again later.";
+            formMessage.className = "form-message error";
+            console.error('EmailJS Error:', error);
+            
+            setTimeout(() => {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }, 3000);
+        }
+    });
+});
